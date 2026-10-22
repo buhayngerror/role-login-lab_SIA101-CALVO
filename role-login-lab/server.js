@@ -1,5 +1,6 @@
 const express = require('express');
 const path = require('path');
+const fs = require('fs');
 const bcrypt = require('bcrypt');
 const app = express();
 
@@ -10,8 +11,20 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // ---------- In-memory "database" ----------
+const DB_FILE = path.join(__dirname, 'users.json');
 let users = [];
 let nextId = 1;
+
+// Load saved users when the server starts
+try {
+  users = JSON.parse(fs.readFileSync(DB_FILE, 'utf8'));
+  nextId = users.reduce((max, u) => Math.max(max, u.id), 0) + 1;
+} catch (err) {
+  users = [];
+}
+
+// Save users to the file after every change
+const saveUsers = () => fs.writeFileSync(DB_FILE, JSON.stringify(users, null, 2));
 
 // ---------- Helpers ----------
 const findUserById = (id) => users.find(u => u.id === id);
@@ -63,6 +76,7 @@ app.post('/api/users', async (req, res) => {
       role: normalizedRole
     };
     users.push(newUser);
+    saveUsers();
     res.status(201).json(sanitizeUser(newUser));
   } catch (err) {
     console.error(err);
@@ -112,6 +126,7 @@ app.put('/api/users/:id', async (req, res) => {
     else if (role === 'staff') user.role = 'staff';
     else if (role === 'user') user.role = 'user';
 
+    saveUsers();
     res.json(sanitizeUser(user));
   } catch (err) {
     console.error(err);
@@ -128,6 +143,7 @@ app.delete('/api/users/:id', (req, res) => {
   if (index === -1) return res.status(404).json({ error: 'User not found.' });
 
   users.splice(index, 1);
+  saveUsers();
   res.status(204).send();
 });
 
@@ -162,6 +178,7 @@ app.post('/api/register', async (req, res) => {
     };
 
     users.push(newUser);
+    saveUsers();
     res.status(201).json({
       message: 'Registration successful',
       user: sanitizeUser(newUser)
@@ -250,6 +267,7 @@ app.put('/api/profile/:id', async (req, res) => {
 
     user.name = name;
     user.email = email;
+    saveUsers();
 
     res.json({
       message: 'Profile updated successfully',

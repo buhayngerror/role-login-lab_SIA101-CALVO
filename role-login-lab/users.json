@@ -1,0 +1,30 @@
+[
+  {
+    "id": 1,
+    "name": "Admin User",
+    "email": "admin@lab.com",
+    "password": "$2b$10$tVyIBzjJvCJ6sCYo6GTFJuI30GLJllmygZKih2mQRAXHooIn0aWny",
+    "role": "admin"
+  },
+  {
+    "id": 2,
+    "name": "Staff Member",
+    "email": "staff@lab.com",
+    "password": "$2b$10$7zY/T5Q0Sh/swh1UpcMfNORdQq83mFXn7ZDesI1HOpc6mUohI3wxi",
+    "role": "staff"
+  },
+  {
+    "id": 3,
+    "name": "Normal User",
+    "email": "user@lab.com",
+    "password": "$2b$10$Nt6LJtYaf9opOQVD.6NBNe7Mcx6PYCs8WHsBxqaplXUIauXWu4/py",
+    "role": "user"
+  },
+  {
+    "id": 4,
+    "name": "Lizzy McAlpine",
+    "email": "lizzy@lab.com",
+    "password": "$2b$10$LCzWJRVuOMVMAjP8C9SNYOMVFrhmb2ksgfxkcgxB.ydWnCcFMO/lC",
+    "role": "user"
+  }
+]
